@@ -1,64 +1,53 @@
-import { Button, InputField } from "@/components";
+import { InputField } from "@/components";
 import { useCatagroy } from "@/context/CatagoryContext";
-import { ActionTypeName } from "@/context/actionType";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ActionTypeName, DynamicBioData } from "@/context/actionType";
+import { ChangeEvent, useEffect } from "react";
+
+const type = "educational";
 
 const Educational = () => {
-  const { dispatch, state } = useCatagroy();
-  const { biodata } = state;
+  const { dispatchFieldValue, inputFieldState } = useCatagroy();
+  const { bioData } = inputFieldState || {};
+  const { educational } = bioData || {};
+  const { education1, education2 } = educational || {};
 
-  const [educationalData, setEducationalData] = useState({
-    education1: {
-      name: "",
-      group: "",
-      institution: "",
-      board: "",
-      cgpa: "",
-      passingYear: "",
-    },
-    education2: {
-      name: "",
-      group: "",
-      institution: "",
-      board: "",
-      cgpa: "",
-      passingYear: "",
-    },
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, subtype: string) => {
+    const { name, value } = e.target;
+    dispatchFieldValue({
+      type: ActionTypeName.CHANGE_EDUCATIONAL_QUESTION_STATE,
+      payload: { type, subtype, name, value },
+    });
+  };
+
+  let data: DynamicBioData = {};
+  let subData: DynamicBioData = {};
+
+  const keys = ["education1", "education2"];
+  const subKeys = [
+    "name",
+    "group",
+    "institution",
+    "board",
+    "cgpa",
+    "passingYear",
+  ];
+
+  subKeys.forEach((key) => {
+    subData[key] = "";
   });
 
-  const { education1, education2 } = educationalData;
+  keys.forEach((key) => {
+    data[key] = educational ? educational[key] : subData;
+  });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, parent: string) => {
-    const { name, value } = e.target;
-
-    setEducationalData({
-      ...educationalData,
-      [parent as keyof typeof educationalData]: {
-        ...educationalData[parent as keyof typeof educationalData],
-        [name]: value,
-      },
-    });
-  };
+  console.log(data);
 
   useEffect(() => {
-    if (biodata.educational)
-      Object.entries(biodata.educational).forEach(([key, value]) => {
-        setEducationalData({
-          ...biodata.educational,
-          [key]: value,
-        });
-      });
-  }, [biodata.question]);
-
-  const handleClick = () => {
-    dispatch({
-      type: ActionTypeName.NEXT_BTN,
+    dispatchFieldValue({
+      type: ActionTypeName.GLOBAL_STATE,
+      payload: { type, data },
     });
-    dispatch({
-      type: ActionTypeName.EDUCATIONAL_STATE,
-      payload: educationalData,
-    });
-  };
+  }, [dispatchFieldValue]);
 
   return (
     <>
@@ -66,7 +55,7 @@ const Educational = () => {
         Last two(2) Educational Qualification
       </h1>
       <div>
-        <div className="bg-slate-100 border-2 mx-auto my-5 grid-cs max-w-3xl p-2">
+        <div className="border-2 mx-auto my-5 grid-cs max-w-3xl p-2">
           <h1 className="grid-1">Education 1</h1>
           <InputField
             title="Exam"
@@ -74,7 +63,7 @@ const Educational = () => {
               handleChange(e, "education1")
             }
             name="name"
-            value={education1.name}
+            value={education1?.name || ""}
             type="text"
             required
             error_message=""
@@ -87,7 +76,7 @@ const Educational = () => {
               handleChange(e, "education1")
             }
             name="group"
-            value={education1.group}
+            value={education1?.group || ""}
             required
             error_message=""
             className=""
@@ -99,7 +88,7 @@ const Educational = () => {
               handleChange(e, "education1")
             }
             name="institution"
-            value={education1.institution}
+            value={education1?.institution || ""}
             required
             error_message=""
             className=""
@@ -111,7 +100,7 @@ const Educational = () => {
               handleChange(e, "education1")
             }
             name="board"
-            value={education1.board}
+            value={education1?.board || ""}
             required
             error_message=""
             className=""
@@ -123,7 +112,7 @@ const Educational = () => {
               handleChange(e, "education1")
             }
             name="cgpa"
-            value={education1.cgpa}
+            value={education1?.cgpa || ""}
             required
             error_message=""
             className=""
@@ -135,13 +124,13 @@ const Educational = () => {
               handleChange(e, "education1")
             }
             name="passingYear"
-            value={education1.passingYear}
+            value={education1?.passingYear || ""}
             required
             error_message=""
             className=""
           />
         </div>
-        <div className="bg-slate-100 border-2 mx-auto my-5 grid-cs max-w-3xl p-2">
+        <div className="border-2 mx-auto my-5 grid-cs max-w-3xl p-2">
           <h1 className="grid-1">Education 2</h1>
           <InputField
             title="Exam"
@@ -149,7 +138,7 @@ const Educational = () => {
               handleChange(e, "education2")
             }
             name="name"
-            value={education2.name}
+            value={education2?.name || ""}
             type="text"
             required
             error_message=""
@@ -162,7 +151,7 @@ const Educational = () => {
               handleChange(e, "education2")
             }
             name="group"
-            value={education2.group}
+            value={education2?.group || ""}
             required
             error_message=""
             className=""
@@ -174,7 +163,7 @@ const Educational = () => {
               handleChange(e, "education2")
             }
             name="institution"
-            value={education2.institution}
+            value={education2?.institution || ""}
             required
             error_message=""
             className=""
@@ -186,7 +175,7 @@ const Educational = () => {
               handleChange(e, "education2")
             }
             name="board"
-            value={education2.board}
+            value={education2?.board || ""}
             required
             error_message=""
             className=""
@@ -198,7 +187,7 @@ const Educational = () => {
               handleChange(e, "education2")
             }
             name="cgpa"
-            value={education2.cgpa}
+            value={education2?.cgpa || ""}
             required
             error_message=""
             className=""
@@ -210,25 +199,12 @@ const Educational = () => {
               handleChange(e, "education2")
             }
             name="passingYear"
-            value={education2.passingYear}
+            value={education2?.passingYear || ""}
             required
             error_message=""
             className=""
           />
         </div>
-      </div>
-      <div className="flex justify-center gap-3 mx-auto mt-3">
-        <Button
-          className=""
-          title="Prev"
-          type="button"
-          onClick={() => {
-            dispatch({
-              type: ActionTypeName.PREV_BTN,
-            });
-          }}
-        />
-        <Button className="" title="Next" type="button" onClick={handleClick} />
       </div>
     </>
   );

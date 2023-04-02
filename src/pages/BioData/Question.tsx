@@ -1,67 +1,43 @@
-import { Button, TextArea } from "@/components";
+import { TextArea } from "@/components";
 import { useCatagroy } from "@/context/CatagoryContext";
-import { ActionTypeName } from "@/context/actionType";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ActionTypeName, DynamicBioData } from "@/context/actionType";
+import { ChangeEvent, useEffect } from "react";
+
+const type = "question";
 
 const Question = () => {
-  const { dispatch, state } = useCatagroy();
-  const { biodata } = state;
+  const { dispatchFieldValue, inputFieldState } = useCatagroy();
+  const { bioData } = inputFieldState || {};
+  const { join, discribe, identify, ideas } = bioData?.question || {};
 
-  const [question, setQuestion] = useState({
-    join: {
-      Q1: "",
-      Q2: "",
-      Q3: "",
-    },
-    discribe: {
-      Q1: "",
-      Q2: "",
-      Q3: "",
-    },
-    identify: {
-      Q1: "",
-      Q2: "",
-      Q3: "",
-    },
-    idea: {
-      Q1: "",
-      Q2: "",
-      Q3: "",
-    },
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, subtype: string) => {
+    const { name, value } = e.target;
+    dispatchFieldValue({
+      type: ActionTypeName.CHANGE_EDUCATIONAL_QUESTION_STATE,
+      payload: { type, subtype, name, value },
+    });
+  };
+
+  let data: DynamicBioData = {};
+
+  const keys = ["join", "discribe", "identify", "ideas"];
+
+  keys.forEach((key) => {
+    data[key] = bioData?.question
+      ? bioData?.question[key]
+      : {
+          Q1: "",
+          Q2: "",
+          Q3: "",
+        };
   });
 
-  const { join, discribe, identify, idea } = question;
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, parent: string) => {
-    const { name, value } = e.target;
-    setQuestion({
-      ...question,
-      [parent as keyof typeof question]: {
-        ...question[parent as keyof typeof question],
-        [name]: value,
-      },
-    });
-  };
-
   useEffect(() => {
-    if (biodata.question)
-      Object.entries(biodata.question).forEach(([key, value]) => {
-        setQuestion({
-          ...biodata.question,
-          [key]: value,
-        });
-      });
-  }, [biodata.question]);
-
-  const handleClick = () => {
-    dispatch({
-      type: ActionTypeName.NEXT_BTN,
+    dispatchFieldValue({
+      type: ActionTypeName.GLOBAL_STATE,
+      payload: { type, data },
     });
-    dispatch({
-      type: ActionTypeName.QUESTION_STATE,
-      payload: question,
-    });
-  };
+  }, [dispatchFieldValue]);
 
   return (
     <>
@@ -76,7 +52,7 @@ const Question = () => {
               handleChange(e, "join")
             }
             name="Q1"
-            value={join.Q1}
+            value={join?.Q1}
             className=""
             no="1."
           />
@@ -85,7 +61,7 @@ const Question = () => {
               handleChange(e, "join")
             }
             name="Q2"
-            value={join.Q2}
+            value={join?.Q2}
             className=""
             no="2."
           />
@@ -94,7 +70,7 @@ const Question = () => {
               handleChange(e, "join")
             }
             name="Q3"
-            value={join.Q3}
+            value={join?.Q3}
             className=""
             no="3."
           />
@@ -108,7 +84,7 @@ const Question = () => {
               handleChange(e, "discribe")
             }
             name="Q1"
-            value={discribe.Q1}
+            value={discribe?.Q1}
             className=""
             no="1."
           />
@@ -117,7 +93,7 @@ const Question = () => {
               handleChange(e, "discribe")
             }
             name="Q2"
-            value={discribe.Q2}
+            value={discribe?.Q2}
             className=""
             no="2."
           />
@@ -126,7 +102,7 @@ const Question = () => {
               handleChange(e, "discribe")
             }
             name="Q3"
-            value={discribe.Q3}
+            value={discribe?.Q3}
             className=""
             no="3."
           />
@@ -140,7 +116,7 @@ const Question = () => {
               handleChange(e, "identify")
             }
             name="Q1"
-            value={identify.Q1}
+            value={identify?.Q1}
             className=""
             no="1."
           />
@@ -149,7 +125,7 @@ const Question = () => {
               handleChange(e, "identify")
             }
             name="Q2"
-            value={identify.Q2}
+            value={identify?.Q2}
             className=""
             no="2."
           />
@@ -158,7 +134,7 @@ const Question = () => {
               handleChange(e, "identify")
             }
             name="Q3"
-            value={identify.Q3}
+            value={identify?.Q3}
             className=""
             no="3."
           />
@@ -169,45 +145,32 @@ const Question = () => {
           </h1>
           <TextArea
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChange(e, "idea")
+              handleChange(e, "ideas")
             }
             name="Q1"
-            value={idea.Q1}
+            value={ideas?.Q1}
             className=""
             no="1."
           />
           <TextArea
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChange(e, "idea")
+              handleChange(e, "ideas")
             }
             name="Q2"
-            value={idea.Q2}
+            value={ideas?.Q2}
             className=""
             no="2."
           />
           <TextArea
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChange(e, "idea")
+              handleChange(e, "ideas")
             }
             name="Q3"
-            value={idea.Q3}
+            value={ideas?.Q3}
             className=""
             no="3."
           />
         </div>
-      </div>
-      <div className="flex justify-center gap-3 mx-auto mt-3">
-        <Button
-          className=""
-          title="Prev"
-          type="button"
-          onClick={() => {
-            dispatch({
-              type: ActionTypeName.PREV_BTN,
-            });
-          }}
-        />
-        <Button className="" title="Next" type="button" onClick={handleClick} />
       </div>
     </>
   );

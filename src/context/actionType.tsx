@@ -1,66 +1,31 @@
-type IdentityType = {
-  username: string;
-  image: File | string;
-  fatherName: string;
-  motherName: string;
-  phonePersonal: string;
-  phoneEmer: string;
-  blood: string;
-  email: string;
-  religion: string;
-  nid: string;
-};
-
-type EducationDataType = {
-  name: string;
-  group: string;
-  institution: string;
-  board: string;
-  cgpa: string;
-  passingYear: string;
-};
-
-type EducationalType = {
-  education1: EducationDataType;
-  education2: EducationDataType;
-};
-
-type QuestionDataType = {
-  Q1: string;
-  Q2: string;
-  Q3: string;
-};
-
-type QuestionType = {
-  join: QuestionDataType;
-  discribe: QuestionDataType;
-  identify: QuestionDataType;
-  idea: QuestionDataType;
+export type DynamicBioData = {
+  [key: string]: any;
 };
 
 export type StateType = {
   step: number;
-  biodata: {
-    identity: IdentityType;
-    educational: EducationalType;
-    question: QuestionType;
+};
+
+export type InputStateType = {
+  bioData: {
+    [key: string]: DynamicBioData;
   };
 };
 
 export enum ActionTypeName {
   NEXT_BTN = "step/next-btn",
   PREV_BTN = "step/prev-btn",
-  IDENTITY_STATE = "catagory/identity-state",
-  EDUCATIONAL_STATE = "catagory/educational-state",
-  QUESTION_STATE = "catagory/question-state",
+  GLOBAL_STATE = "catagory/global-state",
+  CHANGE_IDENTITY_STATE = "catagory/changing-identity-state",
+  CHANGE_EDUCATIONAL_QUESTION_STATE = "catagory/changing-educational-question-state",
 }
 
 export type ActionType = {
   type:
     | ActionTypeName.NEXT_BTN
     | ActionTypeName.PREV_BTN
-    | ActionTypeName.EDUCATIONAL_STATE
-    | ActionTypeName.QUESTION_STATE
-    | ActionTypeName.IDENTITY_STATE;
-  payload?: number | object;
+    | ActionTypeName.CHANGE_EDUCATIONAL_QUESTION_STATE
+    | ActionTypeName.GLOBAL_STATE
+    | ActionTypeName.CHANGE_IDENTITY_STATE;
+  payload?: any;
 };

@@ -1,10 +1,15 @@
-import { ActionType, ActionTypeName, StateType } from "./actionType";
+import {
+  ActionType,
+  ActionTypeName,
+  InputStateType,
+  StateType,
+} from "./actionType";
 const {
   NEXT_BTN,
   PREV_BTN,
-  EDUCATIONAL_STATE,
-  IDENTITY_STATE,
-  QUESTION_STATE,
+  CHANGE_IDENTITY_STATE,
+  CHANGE_EDUCATIONAL_QUESTION_STATE,
+  GLOBAL_STATE,
 } = ActionTypeName;
 
 export const reducer = (state: StateType, { type, payload }: ActionType) => {
@@ -12,33 +17,64 @@ export const reducer = (state: StateType, { type, payload }: ActionType) => {
     case NEXT_BTN: {
       return {
         ...state,
-        step: state.step === 3 ? state.step : state.step + 1,
+        step: state.step >= 3 ? state.step : state.step + 1,
       };
     }
     case PREV_BTN: {
       return {
         ...state,
-        step: payload === state.step ? payload : state.step - 1,
+        step: state.step <= 0 ? 0 : state.step - 1,
       };
     }
-    case IDENTITY_STATE: {
+    default:
+      return state;
+  }
+};
+
+export const stateReducer = (
+  state: InputStateType,
+  { type, payload }: ActionType
+) => {
+  switch (type) {
+    case GLOBAL_STATE: {
       return {
         ...state,
-        biodata: { ...state, identity: payload },
+        bioData: {
+          ...state.bioData,
+          [payload.type]: payload.data,
+        },
       };
     }
-    case EDUCATIONAL_STATE: {
+
+    case CHANGE_IDENTITY_STATE: {
       return {
         ...state,
-        biodata: { ...state, educational: payload },
+        bioData: {
+          ...state.bioData,
+          [payload.type]: {
+            ...state.bioData[payload.type],
+            [payload.name]: payload.value,
+          },
+        },
       };
     }
-    case QUESTION_STATE: {
+
+    case CHANGE_EDUCATIONAL_QUESTION_STATE: {
       return {
         ...state,
-        biodata: { ...state, question: payload },
+        bioData: {
+          ...state.bioData,
+          [payload.type]: {
+            ...state.bioData[payload.type],
+            [payload.subtype]: {
+              ...state.bioData[payload.type][payload.subtype],
+              [payload.name]: payload.value,
+            },
+          },
+        },
       };
     }
+
     default:
       return state;
   }

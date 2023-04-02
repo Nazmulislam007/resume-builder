@@ -1,68 +1,73 @@
-import { Button, InputField } from "@/components";
+import { InputField } from "@/components";
 import { useCatagroy } from "@/context/CatagoryContext";
-import { ActionTypeName } from "@/context/actionType";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ActionTypeName, DynamicBioData } from "@/context/actionType";
+import { ChangeEvent, useEffect } from "react";
+
+const type = "identity";
 
 const Identity = () => {
-  const { state, dispatch } = useCatagroy();
-  const { biodata } = state || {};
-
-  const [identity, setIdentity] = useState({
-    username: "",
-    image: "" as File | string,
-    fatherName: "",
-    motherName: "",
-    phonePersonal: "",
-    phoneEmer: "",
-    blood: "",
-    email: "",
-    religion: "",
-    nid: "",
-  });
+  const { inputFieldState, dispatchFieldValue } = useCatagroy();
+  const { bioData } = inputFieldState || {};
+  const { identity } = bioData || {};
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setIdentity({ ...identity, [name]: value });
+    dispatchFieldValue({
+      type: ActionTypeName.CHANGE_IDENTITY_STATE,
+      payload: { type, name, value },
+    });
   };
 
   const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files)
-      setIdentity({
-        ...identity,
-        image: e.target.files[0],
+    const { name, files } = e.target;
+    if (files) {
+      dispatchFieldValue({
+        type: ActionTypeName.CHANGE_IDENTITY_STATE,
+        payload: { name, value: files[0] },
       });
+    }
   };
+
+  const fields = [
+    "username",
+    "image",
+    "fatherName",
+    "motherName",
+    "phonePersonal",
+    "phoneEmer",
+    "blood",
+    "email",
+    "religion",
+    "nid",
+  ];
+
+  let data: DynamicBioData = {};
+
+  fields.forEach((key) => {
+    data[key] = identity ? identity[key] : "";
+  });
 
   useEffect(() => {
-    if (biodata?.identity)
-      Object.entries(biodata.identity).forEach(([key, value]) => {
-        setIdentity({ ...biodata.identity, [key]: value });
-      });
-  }, [biodata?.identity]);
-
-  const handleClick = () => {
-    dispatch({
-      type: ActionTypeName.NEXT_BTN,
+    dispatchFieldValue({
+      type: ActionTypeName.GLOBAL_STATE,
+      payload: {
+        type,
+        data,
+      },
     });
-    dispatch({
-      type: ActionTypeName.IDENTITY_STATE,
-      payload: identity,
-    });
-  };
+  }, [dispatchFieldValue]);
 
   return (
     <>
       <h1 className="text-center text-4xl font-bold pt-10">Blue Bird Club</h1>
-      <div className="bg-slate-100 mx-auto my-5 grid-cs max-w-3xl p-2">
+      <div className="mx-auto my-5 grid-cs max-w-3xl p-2">
         <InputField
           title="Applicant Name"
           onChange={handleChange}
           name="username"
-          value={identity.username}
+          value={identity?.username || ""}
           type="text"
-          required
           error_message=""
-          className=""
         />
         <InputField
           className="custom-file-input"
@@ -78,30 +83,24 @@ const Identity = () => {
           type="text"
           onChange={handleChange}
           name="fatherName"
-          value={identity.fatherName}
-          required
+          value={identity?.fatherName || ""}
           error_message=""
-          className=""
         />
         <InputField
           title="Mother's Name"
           type="text"
           onChange={handleChange}
           name="motherName"
-          value={identity.motherName}
-          required
+          value={identity?.motherName || ""}
           error_message=""
-          className=""
         />
         <InputField
           title="Email"
           type="email"
           onChange={handleChange}
           name="email"
-          value={identity.email}
-          required
+          value={identity?.email || ""}
           error_message=""
-          className=""
         />
 
         <InputField
@@ -109,10 +108,8 @@ const Identity = () => {
           type="number"
           onChange={handleChange}
           name="phonePersonal"
-          value={identity.phonePersonal}
-          required
+          value={identity?.phonePersonal || ""}
           error_message=""
-          className=""
         />
 
         <InputField
@@ -120,44 +117,33 @@ const Identity = () => {
           type="number"
           onChange={handleChange}
           name="phoneEmer"
-          value={identity.phoneEmer}
-          required
+          value={identity?.phoneEmer || ""}
           error_message=""
-          className=""
         />
         <InputField
           title="Religion"
           type="text"
           onChange={handleChange}
           name="religion"
-          value={identity.religion}
-          required
+          value={identity?.religion || ""}
           error_message=""
-          className=""
         />
         <InputField
           title="Blood Group"
           type="text"
           onChange={handleChange}
           name="blood"
-          value={identity.blood}
+          value={identity?.blood || ""}
           error_message=""
-          className=""
         />
         <InputField
           title="NID/Birth Registration Number"
           type="number"
           onChange={handleChange}
           name="nid"
-          value={identity.nid}
-          required
+          value={identity?.nid || ""}
           error_message=""
-          className=""
         />
-      </div>
-      <div className="flex justify-center gap-3 mx-auto mt-3">
-        <Button className="" title="Log out" type="button" onClick={() => {}} />
-        <Button title="Next" type="button" className="" onClick={handleClick} />
       </div>
     </>
   );

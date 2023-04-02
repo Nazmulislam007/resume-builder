@@ -1,6 +1,6 @@
 type InputProps = {
   error_message: string;
-  className: string;
+  className?: string;
   title: string;
   [rest: string]: any;
 };
@@ -13,14 +13,19 @@ const InputField = ({
 }: InputProps) => {
   return (
     <div className="flex flex-col">
-      <label htmlFor={title} className="text-sm mb-1">
+      <label
+        htmlFor={title}
+        className="tracking-wide text-gray-700 text-xs font-bold mb-2"
+      >
         {title}
       </label>
       <input
-        className={`${className} bg-white border-b-[3px] border-b-transparent transition text-lg px-[5px] focus:outline-offset-0 focus:outline-none focus-within:border-b-[3px] focus-within:border-b-red-600`}
+        className={`${className} bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500`}
         {...rest}
       />
-      {false && <p className="text-red-600 text-xs">{error_message}</p>}
+      {error_message && (
+        <p className="text-red-500 text-xs italic">{error_message}</p>
+      )}
     </div>
   );
 };

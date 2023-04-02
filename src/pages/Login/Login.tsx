@@ -1,8 +1,10 @@
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({
     email: "",
     password: "",
@@ -14,6 +16,7 @@ const Login = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    navigate("/form", { replace: true });
   };
 
   return (
