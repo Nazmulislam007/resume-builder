@@ -49,7 +49,7 @@ const Educational = () => {
 
   return (
     <>
-      <h1 className="text-center text-4xl font-bold text-gray-700 pt-10">
+      <h1 className="text-center text-4xl font-bold text-gray-700 pt-4">
         Last two(2) Educational Qualification
       </h1>
       <div>

@@ -59,7 +59,7 @@ const Identity = () => {
 
   return (
     <>
-      <h1 className="text-center text-4xl font-bold pt-10">Blue Bird Club</h1>
+      <h1 className="text-center text-4xl font-bold">Blue Bird Club</h1>
       <div className="mx-auto my-5 grid-cs max-w-3xl p-2">
         <InputField
           title="Applicant Name"

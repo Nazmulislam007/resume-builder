@@ -42,9 +42,7 @@ const Question = () => {
   return (
     <>
       <div>
-        <h1 className="text-3xl font-bold text-center pt-7">
-          Answer The Questions
-        </h1>
+        <h1 className="text-3xl font-bold text-center">Answer The Questions</h1>
         <div className="mx-auto py-5 max-w-2xl p-2">
           <h1 className="text-lg mb-3">👉 Why do you want to Join us?</h1>
           <TextArea

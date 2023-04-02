@@ -20,13 +20,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-10">
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <Routes>
         <Route path="/" index element={<Login />} />
         <Route
           path="/form"
           element={
-            <>
+            <div className="py-10">
               <form onSubmit={handleSubmit}>{steps[state.step]}</form>
               <div className="flex justify-center gap-3 mx-auto mt-3">
                 {isFirst && (
@@ -55,7 +55,7 @@ function App() {
                   }}
                 />
               </div>
-            </>
+            </div>
           }
         />
       </Routes>

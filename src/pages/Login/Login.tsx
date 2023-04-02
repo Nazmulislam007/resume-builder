@@ -20,11 +20,11 @@ const Login = () => {
   };
 
   return (
-    <>
-      <h1 className="text-center text-4xl font-bold text-gray-700 pt-10">
+    <div className="max-w-[320px] w-full">
+      <h1 className="text-center text-4xl font-bold text-gray-700">
         Login Form
       </h1>
-      <div className="bg-slate-100 mx-auto pt-5 max-w-sm p-2">
+      <div className="pt-5 p-2">
         <InputField
           onChange={handleChange}
           type="email"
@@ -47,9 +47,9 @@ const Login = () => {
         />
       </div>
       <div className="grid mt-3 place-items-center">
-        <Button title="Login" className="" onClick={handleSubmit} />
+        <Button title="Login" className="w-[100px]" onClick={handleSubmit} />
       </div>
-    </>
+    </div>
   );
 };
 
