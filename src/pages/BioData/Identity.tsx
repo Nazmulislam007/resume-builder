@@ -70,7 +70,7 @@ const Identity = () => {
           error_message=""
         />
         <InputField
-          className="custom-file-input"
+          className="custom-file-input block w-full text-sm text-gray-900 border border-purple-500 cursor-pointer focus:outline-purple-500"
           onChange={handleImgChange}
           type="file"
           name="image"

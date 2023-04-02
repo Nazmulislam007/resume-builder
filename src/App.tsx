@@ -36,8 +36,9 @@ function App() {
                 )}
                 <Button
                   title="Prev"
-                  type="button"
-                  onClick={() => {
+                  type="submit"
+                  onClick={(e: SyntheticEvent) => {
+                    e.preventDefault();
                     dispatch({
                       type: ActionTypeName.PREV_BTN,
                     });
@@ -45,8 +46,9 @@ function App() {
                 />
                 <Button
                   title={isLast ? "Generate" : "Next"}
-                  type="button"
-                  onClick={() => {
+                  type="submit"
+                  onClick={(e: SyntheticEvent) => {
+                    e.preventDefault();
                     if (isLast)
                       return dispatch({ type: ActionTypeName.TOGGLE });
                     dispatch({
