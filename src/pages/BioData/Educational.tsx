@@ -40,8 +40,6 @@ const Educational = () => {
     data[key] = educational ? educational[key] : subData;
   });
 
-  console.log(data);
-
   useEffect(() => {
     dispatchFieldValue({
       type: ActionTypeName.GLOBAL_STATE,

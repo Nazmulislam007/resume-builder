@@ -1,68 +1,39 @@
-import { child, get, ref } from "firebase/database";
-import html2pdf from "html-to-pdf-js";
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Button } from "@/components";
+import { useCatagroy } from "@/context/CatagoryContext";
+import jsPDF from "jspdf";
+import { useRef } from "react";
 import { user } from "../../assets";
-import { db } from "../../firebase/firebase";
-import Button from "../Button";
-import InputField from "../InputField";
 
 const Result = () => {
-  const [data, setData] = useState({});
-  const [inputData, setInputData] = useState("");
-  const { bio, education, question } = data;
-  const [show, setShow] = useState(false);
+  const pdfViewRef = useRef<HTMLDivElement>(null);
+  const { state, inputFieldState } = useCatagroy();
+  const { bioData } = inputFieldState;
+  const { identity, educational, question } = bioData;
 
-  const divElement = useRef();
-  const targetDiv = divElement?.current;
+  const handleGenerate = () => {
+    const input = pdfViewRef.current;
+    const pdf = new jsPDF({
+      orientation: "p",
+      unit: "px",
+      format: [1024, 1024],
+      putOnlyUsedFonts: true,
+      floatPrecision: 16,
+    });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    get(child(ref(db), "BioData/" + inputData))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setData(snapshot.val());
-        } else {
-          alert("no data found");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setShow(true);
-  };
-
-  const generatePdf = () => {
-    const opt = {
-      filename: `${inputData}.pdf`,
-      html2canvas: { scale: 4 },
-      jsPDF: { format: "a3", orientation: "portrait" },
-    };
-    html2pdf().set(opt).from(targetDiv).save();
+    pdf.html(input as HTMLDivElement, {
+      callback: function (doc) {
+        doc.save();
+      },
+    });
   };
 
   return (
     <>
       <div className="w-[1024px] mx-auto  mb-10">
-        <div>
-          <InputField
-            placeholder="Enter your Username"
-            value={inputData}
-            className="border-none h-10 mb-3"
-            onChange={(e) => setInputData(e.target.value)}
-          />
-          <Button
-            title="Get User Details"
-            className="mb-4 mr-5"
-            onClick={handleSubmit}
-          />
-          <Button title="Download Pdf" onClick={generatePdf} type="button" />
-        </div>
-
-        {show ? (
+        {state.generate ? (
           <div
-            ref={divElement}
-            className=" mx-auto w-[1024px] bg-white mb-8 p-10"
+            ref={pdfViewRef}
+            className="mx-auto w-[1024px] bg-white mb-8 p-10"
           >
             <div className="flex items-center justify-between mb-8">
               <div className="w-20 h-20 logo-style ">
@@ -79,47 +50,47 @@ const Result = () => {
             <div className="mb-8 font-style">
               <p className="capitalize">
                 <span className="font-extrabold">Applicant Name : </span>
-                {bio?.username}
+                {identity?.username}
               </p>
               <div className="grid grid-cols-2">
                 <div className="font-style">
                   <p>
                     <span className="font-semibold">Father's Name : </span>
-                    {bio?.fName}
+                    {identity?.fatherName}
                   </p>
                   <p>
                     <span className="font-semibold"> Mother's Name : </span>
-                    {bio?.mName}
+                    {identity?.motherName}
                   </p>
                   <p>
                     <span className="font-semibold">
                       Phone Number (Personal) :{" "}
                     </span>
-                    {bio?.pnp}
+                    {identity?.phonePersonal}
                   </p>
                   <p>
                     <span className="font-semibold">
                       Phone Number (Emergency) :{" "}
                     </span>
-                    {bio?.pne}
+                    {identity?.phoneEmer}
                   </p>
                 </div>
                 <div className="font-style">
                   <p>
                     <span className="font-semibold">Email : </span>
-                    {bio?.email}
+                    {identity?.email}
                   </p>
                   <p>
                     <span className="font-semibold">Religion : </span>
-                    {bio?.reli}
+                    {identity?.religion}
                   </p>
                   <p>
                     <span className="font-semibold">Blood Group : </span>
-                    {bio?.bg}
+                    {identity?.blood}
                   </p>
                   <p>
                     <span className="font-semibold">NID : </span>
-                    {bio?.nid}
+                    {identity?.nid}
                   </p>
                 </div>
               </div>
@@ -129,27 +100,27 @@ const Result = () => {
                 <tbody>
                   <tr>
                     <th>Exam</th>
-                    <th>Subject/Group</th>
+                    <th>Subject&#160;&#160;/&#160;Group</th>
                     <th>Institution Name</th>
-                    <th>University/Board</th>
+                    <th>University&#160;/&#160;Board</th>
                     <th>CGPA</th>
                     <th>Year</th>
                   </tr>
                   <tr>
-                    <td>{education?.exam.name1}</td>
-                    <td>{education?.exam.group1}</td>
-                    <td>{education?.exam.inName1}</td>
-                    <td>{education?.exam.board1}</td>
-                    <td>{education?.exam.cgpa1}</td>
-                    <td>{education?.exam.year1}</td>
+                    <td>{educational?.education1.name}</td>
+                    <td>{educational?.education1.group}</td>
+                    <td>{educational?.education1.institution}</td>
+                    <td>{educational?.education1.board}</td>
+                    <td>{educational?.education1.cgpa}</td>
+                    <td>{educational?.education1.passingYear}</td>
                   </tr>
                   <tr>
-                    <td>{education?.exam.name2}</td>
-                    <td>{education?.exam.group2}</td>
-                    <td>{education?.exam.inName2}</td>
-                    <td>{education?.exam.board2}</td>
-                    <td>{education?.exam.cgpa2}</td>
-                    <td>{education?.exam.year2}</td>
+                    <td>{educational?.education2.name}</td>
+                    <td>{educational?.education2.group}</td>
+                    <td>{educational?.education2.institution}</td>
+                    <td>{educational?.education2.board}</td>
+                    <td>{educational?.education2.cgpa}</td>
+                    <td>{educational?.education2.passingYear}</td>
                   </tr>
                 </tbody>
               </table>
@@ -157,78 +128,79 @@ const Result = () => {
             <div className="grid gap-3 grid-cols-2">
               <div>
                 <h1 className="text-sm mb-3 font-bold">
-                  👉 Why do you want to Join us?
+                  &#128073; Why do you want to Join us?
                 </h1>
                 <div className="border-2 border-black px-3 py-2 ">
                   <p className="mb-2">
                     <span className="font-bold">1. </span>
-                    {question?.fq1}
+                    {question?.join.Q1}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">2. </span>
-                    {question?.fq2}
+                    {question?.join.Q2}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">3. </span>
-                    {question?.fq3}
+                    {question?.join.Q3}
                   </p>
                 </div>
               </div>
               <div>
                 <h1 className="text-sm mb-3 font-bold">
-                  👉 Describe Blue Bird Club (BB-C) in 3 Sentence:
+                  &#128073; Describe Blue Bird Club (BB-C) in 3 Sentence:
                 </h1>
                 <div className="border-2 border-black px-3 py-2 ">
                   <p className="mb-2">
                     <span className="font-bold">1. </span>
-                    {question?.sq1}
+                    {question?.discribe.Q1}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">2. </span>
-                    {question?.sq2}
+                    {question?.discribe.Q2}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">3. </span>
-                    {question?.sq3}
+                    {question?.discribe.Q3}
                   </p>
                 </div>
               </div>
               <div>
                 <h1 className="text-sm mb-3 font-bold">
-                  👉 Identify 3 problems of modern society which need to be
-                  fixed:
+                  &#128073; Identify 3 problems of modern society which need to
+                  be fixed:
                 </h1>
                 <div className="border-2 border-black px-3 py-2 ">
                   <p className="mb-2">
                     <span className="font-bold">1. </span>
-                    {question?.tq1}
+                    {question?.identify.Q1}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">2. </span>
-                    {question?.tq2}
+                    {question?.identify.Q2}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">3. </span>
-                    {question?.tq3}
+                    {question?.identify.Q3}
                   </p>
                 </div>
               </div>
               <div>
                 <h1 className="text-sm mb-3 pr-3 font-bold">
-                  👉 3 Ideas of social work which you want to do with BB-C:
+                  &#128073; 3 Ideas of social work which you want to do with
+                  BB-C:
                 </h1>
                 <div className="border-2 border-black px-3 py-2 ">
                   <p className="mb-2">
                     <span className="font-bold">1. </span>
-                    {question?.frq1}
+                    {question?.ideas.Q1}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">2. </span>
-                    {question?.frq2}
+                    {question?.ideas.Q2}
                   </p>
                   <p className="mb-2">
                     <span className="font-bold">3. </span>
-                    {question?.frq3}
+                    {question?.ideas.Q3}
                   </p>
                 </div>
               </div>
@@ -245,16 +217,11 @@ const Result = () => {
             </div>
           </div>
         ) : (
-          <div>
-            <p>No User Data founded</p>
+          <div className="mx-auto w-full">
+            <p className="text-center">No User Data founded</p>
           </div>
         )}
-
-        <div>
-          <Link to="/" className="bg-green-600 px-10 py-2 text-white text-lg">
-            Back
-          </Link>
-        </div>
+        <Button title="Download" onClick={handleGenerate}></Button>
       </div>
     </>
   );

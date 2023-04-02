@@ -10,7 +10,8 @@ import { ActionType, InputStateType, StateType } from "./actionType";
 import { reducer, stateReducer } from "./reducer";
 
 export const initialState: StateType = {
-  step: 0,
+  step: 3,
+  generate: false,
 };
 
 export const inputInitalState: InputStateType = {

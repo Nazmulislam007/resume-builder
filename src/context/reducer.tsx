@@ -7,6 +7,7 @@ import {
 const {
   NEXT_BTN,
   PREV_BTN,
+  TOGGLE,
   CHANGE_IDENTITY_STATE,
   CHANGE_EDUCATIONAL_QUESTION_STATE,
   GLOBAL_STATE,
@@ -24,6 +25,12 @@ export const reducer = (state: StateType, { type, payload }: ActionType) => {
       return {
         ...state,
         step: state.step <= 0 ? 0 : state.step - 1,
+      };
+    }
+    case TOGGLE: {
+      return {
+        ...state,
+        generate: true,
       };
     }
     default:

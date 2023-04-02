@@ -4,6 +4,7 @@ export type DynamicBioData = {
 
 export type StateType = {
   step: number;
+  generate: boolean;
 };
 
 export type InputStateType = {
@@ -15,6 +16,7 @@ export type InputStateType = {
 export enum ActionTypeName {
   NEXT_BTN = "step/next-btn",
   PREV_BTN = "step/prev-btn",
+  TOGGLE = "generate/toggle",
   GLOBAL_STATE = "catagory/global-state",
   CHANGE_IDENTITY_STATE = "catagory/changing-identity-state",
   CHANGE_EDUCATIONAL_QUESTION_STATE = "catagory/changing-educational-question-state",
@@ -26,6 +28,7 @@ export type ActionType = {
     | ActionTypeName.PREV_BTN
     | ActionTypeName.CHANGE_EDUCATIONAL_QUESTION_STATE
     | ActionTypeName.GLOBAL_STATE
+    | ActionTypeName.TOGGLE
     | ActionTypeName.CHANGE_IDENTITY_STATE;
   payload?: any;
 };

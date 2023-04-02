@@ -11,14 +11,12 @@ import Login from "./pages/Login/Login";
 
 function App() {
   const steps = [<Identity />, <Educational />, <Question />, <SubmitData />];
-
   const { state, dispatch, inputFieldState } = useCatagroy();
   const isFirst = state.step === 0;
   const isLast = state.step === steps.length - 1;
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    console.log(inputFieldState);
   };
 
   return (
@@ -49,6 +47,8 @@ function App() {
                   title={isLast ? "Generate" : "Next"}
                   type="button"
                   onClick={() => {
+                    if (isLast)
+                      return dispatch({ type: ActionTypeName.TOGGLE });
                     dispatch({
                       type: ActionTypeName.NEXT_BTN,
                     });
@@ -58,7 +58,6 @@ function App() {
             </>
           }
         />
-        {/* <Route path="/result" element={<Result />} /> */}
       </Routes>
     </div>
   );
