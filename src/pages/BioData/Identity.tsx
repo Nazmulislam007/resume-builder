@@ -1,14 +1,47 @@
-import { InputField } from "@/components";
+import { Button, InputField } from "@/components";
 import { useCatagroy } from "@/context/CatagoryContext";
 import { ActionTypeName, DynamicBioData } from "@/context/actionType";
-import { ChangeEvent, useEffect } from "react";
+import useFormattingError from "@/lib/hooks/useFormattingError";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { object, string } from "yup";
 
 const type = "identity";
 
+let userSchema = object({
+  username: string().required(),
+  image: string(),
+  fatherName: string().required(),
+  motherName: string().required(),
+  phonePersonal: string().required(),
+  phoneEmer: string().required(),
+  blood: string().required(),
+  email: string().email("email must be valid").required(),
+  nid: string().required(),
+  religion: string().required(),
+});
+
 const Identity = () => {
-  const { inputFieldState, dispatchFieldValue } = useCatagroy();
+  const { formatingError } = useFormattingError();
+  const [errors, setErrors] = useState<string[]>([]);
+  const { inputFieldState, dispatchFieldValue, dispatch } = useCatagroy();
   const { bioData } = inputFieldState || {};
   const { identity } = bioData || {};
+
+  function validation() {
+    userSchema
+      .validate(identity, { abortEarly: false })
+      .then((data) => {
+        dispatch({
+          type: ActionTypeName.NEXT_BTN,
+        });
+      })
+      .catch((err) => {
+        setErrors(err.errors);
+      });
+  }
+
+  const formatingErrors = formatingError(errors);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,7 +100,7 @@ const Identity = () => {
           name="username"
           value={identity?.username || ""}
           type="text"
-          error_message=""
+          error_message={formatingErrors?.username}
         />
         <InputField
           className="custom-file-input block w-full text-sm text-gray-900 border border-purple-500 cursor-pointer focus:outline-purple-500"
@@ -75,7 +108,7 @@ const Identity = () => {
           type="file"
           name="image"
           accept="image/*"
-          error_message=""
+          error_message={formatingErrors?.image}
           title="Image"
         />
         <InputField
@@ -84,7 +117,7 @@ const Identity = () => {
           onChange={handleChange}
           name="fatherName"
           value={identity?.fatherName || ""}
-          error_message=""
+          error_message={formatingErrors?.fatherName}
         />
         <InputField
           title="Mother's Name"
@@ -92,7 +125,7 @@ const Identity = () => {
           onChange={handleChange}
           name="motherName"
           value={identity?.motherName || ""}
-          error_message=""
+          error_message={formatingErrors?.motherName}
         />
         <InputField
           title="Email"
@@ -100,7 +133,7 @@ const Identity = () => {
           onChange={handleChange}
           name="email"
           value={identity?.email || ""}
-          error_message=""
+          error_message={formatingErrors?.email}
         />
 
         <InputField
@@ -109,7 +142,7 @@ const Identity = () => {
           onChange={handleChange}
           name="phonePersonal"
           value={identity?.phonePersonal || ""}
-          error_message=""
+          error_message={formatingErrors?.phonePersonal}
         />
 
         <InputField
@@ -118,7 +151,7 @@ const Identity = () => {
           onChange={handleChange}
           name="phoneEmer"
           value={identity?.phoneEmer || ""}
-          error_message=""
+          error_message={formatingErrors?.phoneEmer}
         />
         <InputField
           title="Religion"
@@ -126,7 +159,7 @@ const Identity = () => {
           onChange={handleChange}
           name="religion"
           value={identity?.religion || ""}
-          error_message=""
+          error_message={formatingErrors?.religion}
         />
         <InputField
           title="Blood Group"
@@ -134,7 +167,7 @@ const Identity = () => {
           onChange={handleChange}
           name="blood"
           value={identity?.blood || ""}
-          error_message=""
+          error_message={formatingErrors?.blood}
         />
         <InputField
           title="NID/Birth Registration Number"
@@ -142,7 +175,21 @@ const Identity = () => {
           onChange={handleChange}
           name="nid"
           value={identity?.nid || ""}
-          error_message=""
+          error_message={formatingErrors?.nid}
+        />
+      </div>
+
+      <div className="flex justify-center gap-3 mx-auto mt-3">
+        <Link to="/">
+          <Button title="Logout" type="button" />
+        </Link>
+        <Button
+          title="Next"
+          type="button"
+          onClick={(e: SyntheticEvent) => {
+            e.preventDefault();
+            validation();
+          }}
         />
       </div>
     </>

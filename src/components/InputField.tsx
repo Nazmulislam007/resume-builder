@@ -24,7 +24,7 @@ const InputField = ({
         {...rest}
       />
       {error_message && (
-        <p className="text-red-500 text-xs italic">{error_message}</p>
+        <p className="text-red-500 text-xs pt-[2px]">{error_message}</p>
       )}
     </div>
   );

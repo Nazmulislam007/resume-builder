@@ -1,12 +1,12 @@
-import { InputField } from "@/components";
+import { Button, InputField } from "@/components";
 import { useCatagroy } from "@/context/CatagoryContext";
 import { ActionTypeName, DynamicBioData } from "@/context/actionType";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect } from "react";
 
 const type = "educational";
 
 const Educational = () => {
-  const { dispatchFieldValue, inputFieldState } = useCatagroy();
+  const { dispatchFieldValue, inputFieldState, dispatch } = useCatagroy();
   const { bioData } = inputFieldState || {};
   const { educational } = bioData || {};
   const { education1, education2 } = educational || {};
@@ -203,6 +203,25 @@ const Educational = () => {
             className=""
           />
         </div>
+      </div>
+      <div className="flex justify-center gap-3 mx-auto mt-3">
+        <Button
+          title="Prev"
+          type="submit"
+          onClick={(e: SyntheticEvent) => {
+            e.preventDefault();
+            dispatch({
+              type: ActionTypeName.PREV_BTN,
+            });
+          }}
+        />
+        <Button
+          title={"Next"}
+          type="button"
+          onClick={(e: SyntheticEvent) => {
+            e.preventDefault();
+          }}
+        />
       </div>
     </>
   );
