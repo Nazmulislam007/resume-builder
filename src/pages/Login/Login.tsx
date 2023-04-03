@@ -20,11 +20,11 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-[320px] w-full">
+    <div className="max-w-[320px] w-full -mt-12">
       <h1 className="text-center text-4xl font-bold text-gray-700">
         Login Form
       </h1>
-      <div className="pt-5 p-2">
+      <div className="p-2">
         <InputField
           onChange={handleChange}
           type="email"
